@@ -12,6 +12,8 @@ public class SelectCADFile : MonoBehaviour
 
     string path;
 
+    public ScaleObj tmp;
+
     void LoadCADFile()
     {
         if (!Application.isPlaying) {
@@ -22,5 +24,7 @@ public class SelectCADFile : MonoBehaviour
         path = EditorUtility.OpenFilePanel("Select .obj File", "", "obj");
         GameObject importedObj = new OBJLoader().Load(path);
         //Mesh importedMesh = GetComponent<ObjFromFile>().ImportFile(path);
+
+        tmp.obj = importedObj;
     }
 }
