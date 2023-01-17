@@ -69,10 +69,12 @@ namespace Valve.VR.InteractionSystem
 
             UpdateCenterPoint();
 
-            handCollider.MoveTo(targetPosition, targetRotation);
+            handCollider.TeleportTo(targetPosition, targetRotation);
 
-            if ((handCollider.transform.position - targetPosition).sqrMagnitude > handResetDistance * handResetDistance)
-                handCollider.TeleportTo(targetPosition, targetRotation);
+            //handCollider.MoveTo(targetPosition, targetRotation);
+
+            //if ((handCollider.transform.position - targetPosition).sqrMagnitude > handResetDistance * handResetDistance)
+            //    handCollider.TeleportTo(targetPosition, targetRotation);
 
             UpdateFingertips();
         }

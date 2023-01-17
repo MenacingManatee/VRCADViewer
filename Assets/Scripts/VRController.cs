@@ -45,6 +45,8 @@ public class VRController : MonoBehaviour
 
     private void HandleHead()
     {
+        if (!cameraRig)
+            return;
         Vector3 oldPos = cameraRig.position;
         Quaternion oldRot = cameraRig.rotation;
 
@@ -97,6 +99,8 @@ public class VRController : MonoBehaviour
 
     private void HandleHeight()
     {
+        if (!head)
+            return;
         float headHeight = Mathf.Clamp(head.localPosition.y, 0.5f, 2f);
         player.height = headHeight;
 
