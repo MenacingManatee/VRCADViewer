@@ -9,6 +9,14 @@ public class Teleport : MonoBehaviour
     public AudioSource onTeleport;
     public CharacterController player;
 
+    private float teleportCD = 0f;
+
+    void Update()
+    {
+        if (teleportCD > 0)
+            teleportCD -= Time.deltaTime;
+    }
+
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -30,19 +38,27 @@ public class Teleport : MonoBehaviour
 
     public void TeleportToLocation(Transform pos)
     {
+        if (teleportCD > 0)
+            return;
+        teleportCD = 2f;
         SteamVR_Fade.Start(Color.clear, 0);
         SteamVR_Fade.Start(Color.black, 0.15f);
         StartCoroutine(DoTeleport(pos));
         if (onTeleport)
+        {
+            onTeleport.Stop();
             onTeleport.Play();
+        }
     }
 
     private IEnumerator DoTeleport(Transform pos)
     {
         yield return new WaitForSeconds(0.15f);
-        player.enabled = false;
+        if (player)
+            player.enabled = false;
         transform.position = pos.position;
-        player.enabled = true;
+        if (player)
+            player.enabled = true;
         StartCoroutine(FadeIn());
     }
 

@@ -12,7 +12,6 @@ TagManager:
   - Water
   - UI
   - Character
-  - Hands
   - 
   - 
   - 
@@ -34,9 +33,10 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
+  - Hand
+  - HandPlayer
+  - Grabbable
+  - Grabbing
   m_SortingLayers:
   - name: Default
     uniqueID: 0

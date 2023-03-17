@@ -88,7 +88,7 @@ public class VRController : MonoBehaviour
         if (!isFlying)
         {
             direction = Player.instance.hmdTransform.TransformDirection(new Vector3(moveValue.axis.x, 0f, moveValue.axis.y));
-            player.Move(speed * Time.deltaTime * Vector3.ProjectOnPlane(direction, Vector3.up));
+            player.Move(speed * Time.deltaTime * Vector3.ProjectOnPlane(direction, Vector3.up) + new Vector3(0, -0.7f, 0));
         }
         else
         {
