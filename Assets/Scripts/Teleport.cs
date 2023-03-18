@@ -7,9 +7,12 @@ using Valve.VR;
 public class Teleport : MonoBehaviour
 {
     public AudioSource onTeleport;
+    public AudioSource onElevator;
+    public AudioSource onElevatorDone;
     public CharacterController player;
 
     private float teleportCD = 0f;
+    private Coroutine c;
 
     void Update()
     {
@@ -51,15 +54,38 @@ public class Teleport : MonoBehaviour
         }
     }
 
-    private IEnumerator DoTeleport(Transform pos)
+    public void ElevatorToLocation(Transform pos)
     {
-        yield return new WaitForSeconds(0.15f);
+        if (c != null)
+            return;
+        SteamVR_Fade.Start(Color.clear, 0);
+        SteamVR_Fade.Start(Color.black, 0.15f);
+        c = StartCoroutine(DoTeleport(pos, true, 0.95f));
+        if (onElevator)
+        {
+            if (onTeleport)
+                onTeleport.Stop();
+            onElevator.Stop();
+            onElevator.Play();
+        }
+    }
+
+    private IEnumerator DoTeleport(Transform pos, bool isElevator = false, float waitSeconds = 0.15f)
+    {
+        yield return new WaitForSeconds(waitSeconds);
         if (player)
             player.enabled = false;
         transform.position = pos.position;
         if (player)
             player.enabled = true;
+        if (isElevator && onElevator && onElevatorDone)
+        {
+            onElevator.Stop();
+            onElevatorDone.Stop();
+            onElevatorDone.Play();
+        }
         StartCoroutine(FadeIn());
+        c = null;
     }
 
     private IEnumerator OpenScene(string sceneName)
