@@ -10,9 +10,15 @@ public class Teleport : MonoBehaviour
     public AudioSource onElevator;
     public AudioSource onElevatorDone;
     public CharacterController player;
+    public GameObject headFollowObject;
 
     private float teleportCD = 0f;
     private Coroutine c;
+
+    void Start()
+    {
+        headFollowObject = GameObject.Find("Head Follower");
+    }
 
     void Update()
     {
@@ -73,9 +79,14 @@ public class Teleport : MonoBehaviour
     private IEnumerator DoTeleport(Transform pos, bool isElevator = false, float waitSeconds = 0.15f)
     {
         yield return new WaitForSeconds(waitSeconds);
+        Vector3 headFollowOffset = Vector3.zero;
         if (player)
             player.enabled = false;
+        if (headFollowObject)
+            headFollowOffset = headFollowObject.transform.position - transform.position;
         transform.position = pos.position;
+        if (headFollowObject)
+            headFollowObject.transform.position = transform.position + headFollowOffset;
         if (player)
             player.enabled = true;
         if (isElevator && onElevator && onElevatorDone)
