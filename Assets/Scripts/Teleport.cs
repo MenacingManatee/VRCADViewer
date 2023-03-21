@@ -11,6 +11,9 @@ public class Teleport : MonoBehaviour
     public AudioSource onElevatorDone;
     public CharacterController player;
     public GameObject headFollowObject;
+    public GameObject playerObjectsContainer;
+
+    public bool debugNoFade = false;
 
     private float teleportCD = 0f;
     private Coroutine c;
@@ -51,7 +54,8 @@ public class Teleport : MonoBehaviour
             return;
         teleportCD = 2f;
         SteamVR_Fade.Start(Color.clear, 0);
-        SteamVR_Fade.Start(Color.black, 0.15f);
+        if (!debugNoFade)
+            SteamVR_Fade.Start(Color.black, 0.15f);
         StartCoroutine(DoTeleport(pos));
         if (onTeleport)
         {
@@ -76,17 +80,20 @@ public class Teleport : MonoBehaviour
         }
     }
 
-    private IEnumerator DoTeleport(Transform pos, bool isElevator = false, float waitSeconds = 0.15f)
+    private IEnumerator DoTeleport(Transform pos, bool isElevator = false, float waitSeconds = 0.5f)
     {
-        yield return new WaitForSeconds(waitSeconds);
+        yield return new WaitForSeconds(0.15f);
         Vector3 headFollowOffset = Vector3.zero;
         if (player)
             player.enabled = false;
         if (headFollowObject)
             headFollowOffset = headFollowObject.transform.position - transform.position;
+        Debug.Log(headFollowOffset);
         transform.position = pos.position;
+        if (playerObjectsContainer)
+            playerObjectsContainer.transform.position = pos.position;
         if (headFollowObject)
-            headFollowObject.transform.position = transform.position + headFollowOffset;
+            headFollowObject.transform.position = transform.position;
         if (player)
             player.enabled = true;
         if (isElevator && onElevator && onElevatorDone)
@@ -95,6 +102,7 @@ public class Teleport : MonoBehaviour
             onElevatorDone.Stop();
             onElevatorDone.Play();
         }
+        yield return new WaitForSeconds(waitSeconds);
         StartCoroutine(FadeIn());
         c = null;
     }
