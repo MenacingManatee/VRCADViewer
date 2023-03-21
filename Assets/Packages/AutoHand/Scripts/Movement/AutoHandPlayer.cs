@@ -63,6 +63,7 @@ namespace Autohand {
         public float snapTurnAngle = 30f;
         [HideIf("snapTurning")]
         public float smoothTurnSpeed = 10f;
+        public bool useTurn = true;
 
 
         [AutoToggleHeader("Height")]
@@ -366,9 +367,12 @@ namespace Autohand {
         }
 
         private void Update() {
-            if(useMovement) {
+            if (useMovement)
+            {
                 UpdatePlatform(false);
                 InterpolateMovement();
+            }
+            if (useTurn) {
                 UpdateTurn(Time.deltaTime);
             }
         }
@@ -459,7 +463,7 @@ namespace Autohand {
 
 
         Vector3 offset;
-        void SyncBodyHead() {
+        internal void SyncBodyHead() {
             var delta = 50f * Time.fixedDeltaTime;
             float scale = transform.lossyScale.x > transform.lossyScale.z ? transform.lossyScale.x : transform.lossyScale.z;
 
